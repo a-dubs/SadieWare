@@ -6,7 +6,7 @@ import { Box, BoxProps, Button, IconButton } from "@mui/joy";
 import { Fragment, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { useCurrentUser } from "../core/auth";
-import { ColorSchemeButton } from "./button-color-scheme";
+// import { ColorSchemeButton } from "./button-color-scheme";
 import { UserAvatarButton } from "./button-user-avatar";
 
 export function Toolbar(props: ToolbarProps): JSX.Element {
@@ -47,7 +47,7 @@ function ActionButtons(): JSX.Element {
 
   return (
     <Fragment>
-      <ColorSchemeButton variant="soft" size="sm" />
+      {/* <ColorSchemeButton variant="soft" size="sm" /> */}
 
       <IconButton variant="soft" size="sm">
         <NotificationsRounded />

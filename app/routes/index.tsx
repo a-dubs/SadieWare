@@ -33,6 +33,8 @@ export const router = createBrowserRouter([
       { path: "dashboard", lazy: () => import("./dashboard") },
       { path: "tasks", lazy: () => import("./tasks") },
       { path: "messages", lazy: () => import("./messages") },
+      // add newpage route
+      { path: "newpage", lazy: () => import("./newpage") },
     ],
   },
 ]);

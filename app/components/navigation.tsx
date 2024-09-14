@@ -5,6 +5,7 @@ import {
   AssignmentTurnedInRounded,
   ChatRounded,
   Dashboard,
+  StarRounded,
 } from "@mui/icons-material";
 import {
   List,
@@ -36,6 +37,7 @@ export const Navigation = memo(function Navigation(
         icon={<AssignmentTurnedInRounded />}
       />
       <NavItem path="/messages" label="Messages" icon={<ChatRounded />} />
+      <NavItem path="/newpage" label="NewPage" icon={<StarRounded />} />
     </List>
   );
 });
