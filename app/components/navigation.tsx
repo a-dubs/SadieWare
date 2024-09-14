@@ -37,7 +37,7 @@ export const Navigation = memo(function Navigation(
         icon={<AssignmentTurnedInRounded />}
       />
       <NavItem path="/messages" label="Messages" icon={<ChatRounded />} />
-      <NavItem path="/newpage" label="NewPage" icon={<StarRounded />} />
+      <NavItem path="/areacode" label="AreaCode" icon={<StarRounded />} />
     </List>
   );
 });

@@ -8,7 +8,7 @@ const width = 260;
 
 export function Sidebar(props: SidebarProps): JSX.Element {
   const { sx, ...other } = props;
-
+  console.log("Sidebar");
   return (
     <Sheet
       sx={{
