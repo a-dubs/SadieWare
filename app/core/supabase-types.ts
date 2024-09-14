@@ -39,21 +39,21 @@ export type Database = {
           description: string | null
           device_type: string
           id: number
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
           created_at?: string
           description?: string | null
           device_type: string
           id?: number
-          updated_at?: string | null
+          updated_at: string
         }
         Update: {
           created_at?: string
           description?: string | null
           device_type?: string
           id?: number
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -67,7 +67,7 @@ export type Database = {
           manufacturer: string | null
           name: string
           specs_description: string | null
-          updated_at: string | null
+          updated_at: string
           vendor: string | null
         }
         Insert: {
@@ -79,7 +79,7 @@ export type Database = {
           manufacturer?: string | null
           name: string
           specs_description?: string | null
-          updated_at?: string | null
+          updated_at: string
           vendor?: string | null
         }
         Update: {
@@ -91,7 +91,7 @@ export type Database = {
           manufacturer?: string | null
           name?: string
           specs_description?: string | null
-          updated_at?: string | null
+          updated_at?: string
           vendor?: string | null
         }
         Relationships: [

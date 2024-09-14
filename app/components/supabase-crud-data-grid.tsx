@@ -1,48 +1,19 @@
-import * as React from 'react';
-import { DataGrid, GridColDef, GridRowModel, GridRowId, GridSlots } from '@mui/x-data-grid';
+import AddIcon from '@mui/icons-material/Add';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import SaveIcon from '@mui/icons-material/Save';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
-import EditIcon from '@mui/icons-material/Edit';
 import {
-  GridActionsCellItem,
-  GridRowModes,
-  GridRowModesModel,
-  GridEventListener,
+  DataGrid, GridActionsCellItem, GridColDef, GridEventListener, GridRowId, GridRowModel, GridRowModes,
+  GridRowModesModel, GridSlots, GridToolbarContainer
 } from '@mui/x-data-grid';
-import { GridToolbarContainer } from '@mui/x-data-grid';
-import { randomId } from '@mui/x-data-grid-generator';
-import supabase from '../core/supabase'; // Adjust the path to your Supabase client setup
+import * as React from 'react';
 import { useEffect } from 'react';
+import supabase from '../core/supabase'; // Adjust the path to your Supabase client setup
 
-// Add a row to the Supabase table
-export const addRowToSupabase = async (tableName: string, row: any) => {
-  const { error } = await supabase.from(tableName).insert([row]);
-  if (error) {
-    console.error('Error adding row:', error);
-  }
-};
-
-// Update a row in Supabase
-export const updateRowInSupabase = async (tableName: string, id: GridRowId, row: any) => {
-  const { error } = await supabase.from(tableName).update(row).eq('id', id);
-  if (error) {
-    console.error('Error updating row:', error);
-  }
-};
-
-// Delete a row from Supabase
-export const deleteRowFromSupabase = async (tableName: string, id: GridRowId) => {
-  const { error } = await supabase.from(tableName).delete().eq('id', id);
-  if (error) {
-    console.error('Error deleting row:', error);
-  }
-};
-
-
+// custom cells for editing: https://mui.com/x/react-data-grid/editing/#create-your-own-edit-component
 
 // function to query the database for highest id
 async function getHighestId(tableName: string) {
@@ -64,28 +35,60 @@ interface EditableRow extends Identifiable {
 }
 
 
-interface ParameterizedCrudDataGridProps<T extends EditableRow> {
+interface ParameterizedCrudDataGridProps<
+  T extends EditableRow,
+  TInsert,
+> {
   rows: Omit<T, 'created_at' | 'updated_at'>[]; // Omit 'created_at' and 'updated_at'
   columns: GridColDef[];
-  addRow: (row: Omit<T, 'created_at' | 'updated_at'>) => Promise<void>;
-  updateRow: (id: GridRowId, row: Omit<T, 'created_at' | 'updated_at'>) => Promise<void>;
-  deleteRow: (id: GridRowId) => Promise<void>;
   defaultRow: Omit<T, 'created_at' | 'updated_at'>;
   tableName: string;
   defaultFieldToFocus: string;
+  rowValuesAreValid: (row: T) => boolean;
+  rowHasErrorRecord?: { [key: string]: boolean };
+  getInsertValues: (row: T) => TInsert;
 }
 
-export function ParameterizedCrudDataGrid<T extends EditableRow>({
+export function ParameterizedCrudDataGrid<
+  T extends EditableRow,
+  TInsert extends Omit<T, 'created_at' | 'updated_at'>,
+>({
   rows: initialRows,
   columns,
-  addRow,
-  updateRow,
-  deleteRow,
   defaultRow,
   tableName,
   defaultFieldToFocus,
-}: ParameterizedCrudDataGridProps<T>) {
+  rowValuesAreValid,
+  rowHasErrorRecord,
+  getInsertValues,
+}: ParameterizedCrudDataGridProps<T, TInsert>) {
 
+
+
+  // // Add a row to the Supabase table
+  // const addRow = async (row: TInsert) => {
+  //   const { error } = await supabase.from(tableName).insert([row]).select();
+  //   if (error) {
+  //     console.error('Error adding row:', error);
+  //   }
+  // };
+
+  // Update a row in Supabase
+  const updateRow = async (id: GridRowId, row: any) => {
+    const insertValues = getInsertValues(row);
+    const { error } = await supabase.from(tableName).upsert(insertValues).eq('id', id);
+    if (error) {
+      console.error('Error updating row:', error);
+    }
+  };
+
+  // Delete a row from Supabase
+  const deleteRow = async (id: GridRowId) => {
+    const { error } = await supabase.from(tableName).delete().eq('id', id);
+    if (error) {
+      console.error('Error deleting row:', error);
+    }
+  };
 
   function EditToolbar<T>({
     setRows,
@@ -98,19 +101,18 @@ export function ParameterizedCrudDataGrid<T extends EditableRow>({
     ) => void;
     defaultRow: T;
   }) {
-    const handleAddClick = async () => {
+    const handleAddClick = () => {
       // generate new id that is 1 higher than the highest id in the current rows
-      getHighestId(tableName).then((highestId:number) => {
+      getHighestId(tableName).then((highestId: number) => {
         setRows((oldRows) => [
           ...oldRows,
-          { ...defaultRow, id: highestId+1, isNew: true },
+          { ...defaultRow, id: highestId + 1, isNew: true },
         ]);
         setRowModesModel((oldModel) => ({
           ...oldModel,
-          [highestId+1]: { mode: GridRowModes.Edit, fieldToFocus: defaultFieldToFocus },
+          [highestId + 1]: { mode: GridRowModes.Edit, fieldToFocus: defaultFieldToFocus },
         }));
       });
-
     };
 
     return (
@@ -121,8 +123,6 @@ export function ParameterizedCrudDataGrid<T extends EditableRow>({
       </GridToolbarContainer>
     );
   }
-
-
 
   const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
@@ -136,7 +136,12 @@ export function ParameterizedCrudDataGrid<T extends EditableRow>({
   const processRowUpdate = async (newRow: GridRowModel) => {
     // Cast newRow to the type T before passing to updateRow
     const typedRow = newRow as unknown as T;
-    console.log(`Updating row with id ${newRow.id} to:`, typedRow);
+    console.log(`Row #${newRow.id} updated to:`, typedRow);
+    if (!rowValuesAreValid(typedRow)) {
+      console.error('Row values are not valid:', typedRow);
+      return;
+    }
+
     await updateRow(newRow.id, typedRow);
     setRows(rows.map((row) => (row.id === newRow.id ? typedRow : row)));
     return typedRow;
@@ -182,6 +187,15 @@ export function ParameterizedCrudDataGrid<T extends EditableRow>({
     setRowModesModel(newRowModesModel);
   };
 
+  // whenever rowsWithErrors change, log the new rowsWithErrors and
+
+  const rowHasError = (id: GridRowId) => {
+    // if rowsWithErrors is undefined, return false
+    // if rowsWithErrors[id] is undefined, return true (new row has to be filled out first so should start with error)
+    // otherwise return rowsWithErrors[id]
+    return rowHasErrorRecord ? rowHasErrorRecord[id] || false : false;
+  }
+
   const columnsWithActions: GridColDef[] = [
     ...columns,
     {
@@ -202,6 +216,7 @@ export function ParameterizedCrudDataGrid<T extends EditableRow>({
                 color: "primary.main",
               }}
               onClick={handleSaveClick(id)}
+              disabled={rowHasError(id)}
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}
