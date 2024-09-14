@@ -15,6 +15,7 @@
     "postinstall": "husky install && node ./scripts/post-install.js",
     "start": "yarn workspace app start",
     "lint": "eslint --cache --report-unused-disable-directives .",
+    "format": "prettier --write .",
     "test": "vitest",
     "build": "yarn workspaces foreach -tiA run build",
     "deploy": "yarn workspace edge deploy"
@@ -23,6 +24,7 @@
     "@emotion/babel-plugin": "^11.11.0",
     "@emotion/eslint-plugin": "^11.11.0",
     "@types/eslint": "^8.56.2",
+    "@types/react-dom": "^18",
     "@typescript-eslint/eslint-plugin": "^7.0.1",
     "@typescript-eslint/parser": "^7.0.1",
     "eslint": "^8.56.0",
@@ -55,5 +57,16 @@
     "bracketSameLine": false,
     "arrowParens": "always",
     "endOfLine": "lf"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.0",
+    "@mui/material": "^6.1.0",
+    "@mui/system": "^6.1.0",
+    "@mui/utils": "^6.1.0",
+    "@mui/x-data-grid": "^7.17.0",
+    "@mui/x-data-grid-pro": "^7.17.0",
+    "react-dom": "^18.3.1"
   }
 }
