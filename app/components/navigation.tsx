@@ -6,6 +6,8 @@ import {
   ChatRounded,
   Dashboard,
   StarRounded,
+  EditLocationTwoTone,
+  DynamicFormTwoTone,
 } from "@mui/icons-material";
 import {
   List,
@@ -30,14 +32,15 @@ export const Navigation = memo(function Navigation(
       role="navigation"
       {...other}
     >
-      <NavItem path="/dashboard" label="Dashboard" icon={<Dashboard />} />
+      {/* <NavItem path="/dashboard" label="Dashboard" icon={<Dashboard />} />
       <NavItem
         path="/tasks"
         label="Tasks"
         icon={<AssignmentTurnedInRounded />}
       />
-      <NavItem path="/messages" label="Messages" icon={<ChatRounded />} />
-      <NavItem path="/areacode" label="AreaCode" icon={<StarRounded />} />
+      <NavItem path="/messages" label="Messages" icon={<ChatRounded />} /> */}
+      <NavItem path="/areacode" label="AreaCode" icon={<EditLocationTwoTone />} />
+      <NavItem path="/devicetype" label="Device Type" icon={<DynamicFormTwoTone />} />
     </List>
   );
 });

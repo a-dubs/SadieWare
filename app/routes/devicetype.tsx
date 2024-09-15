@@ -2,16 +2,16 @@
 /* SPDX-License-Identifier: MIT */
 
 import { Paper } from "@mui/material";
-import AreaCodeGrid from "../components/areacode-table";
+import DeviceTypeGrid from "../components/devicetype-table";
 import { usePageEffect } from "../core/page";
 
 export const Component = function AreaCode(): JSX.Element {
-  usePageEffect({ title: "Area Code" });
-  console.log("AreaCode");
+  usePageEffect({ title: "Device Type" });
+  console.log("DeviceType");
 
   return (
-    <Paper style={{width:500, margin: 30}} elevation={3}>
-      <AreaCodeGrid />
+    <Paper style={{width:550, margin: 30}} elevation={3}>
+      <DeviceTypeGrid />
     </Paper>
   )
 };

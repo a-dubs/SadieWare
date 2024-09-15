@@ -29,12 +29,12 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     errorElement: <RootError />,
     children: [
-      { index: true, element: <Navigate to="/dashboard" replace /> },
-      { path: "dashboard", lazy: () => import("./dashboard") },
-      { path: "tasks", lazy: () => import("./tasks") },
-      { path: "messages", lazy: () => import("./messages") },
-      // add areacode route
+      { index: true, element: <Navigate to="/areacode" replace /> },
+      // { path: "dashboard", lazy: () => import("./dashboard") },
+      // { path: "tasks", lazy: () => import("./tasks") },
+      // { path: "messages", lazy: () => import("./messages") },
       { path: "areacode", lazy: () => import("./areacode") },
+      { path: "devicetype", lazy: () => import("./devicetype") },
     ],
   },
 ]);

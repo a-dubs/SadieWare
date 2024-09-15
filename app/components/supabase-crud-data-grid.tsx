@@ -40,6 +40,7 @@ interface ParameterizedCrudDataGridProps<
   TInsert,
 > {
   rows: Omit<T, 'created_at' | 'updated_at'>[]; // Omit 'created_at' and 'updated_at'
+  setRows: React.Dispatch<React.SetStateAction<Omit<T, "created_at" | "updated_at">[]>>;
   columns: GridColDef[];
   defaultRow: Omit<T, 'created_at' | 'updated_at'>;
   tableName: string;
@@ -47,13 +48,15 @@ interface ParameterizedCrudDataGridProps<
   rowValuesAreValid: (row: T) => boolean;
   rowHasErrorRecord?: { [key: string]: boolean };
   getInsertValues: (row: T) => TInsert;
+  sendRowToSupabase: (row: T) => Promise<void>;
 }
 
 export function ParameterizedCrudDataGrid<
   T extends EditableRow,
   TInsert extends Omit<T, 'created_at' | 'updated_at'>,
 >({
-  rows: initialRows,
+  rows,
+  setRows,
   columns,
   defaultRow,
   tableName,
@@ -61,6 +64,7 @@ export function ParameterizedCrudDataGrid<
   rowValuesAreValid,
   rowHasErrorRecord,
   getInsertValues,
+  sendRowToSupabase,
 }: ParameterizedCrudDataGridProps<T, TInsert>) {
 
 
@@ -124,7 +128,7 @@ export function ParameterizedCrudDataGrid<
     );
   }
 
-  const [rows, setRows] = React.useState(initialRows);
+  // const [rows, setRows] = React.useState(initialRows);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 
   // when rows change, log the new rows
@@ -142,7 +146,8 @@ export function ParameterizedCrudDataGrid<
       return;
     }
 
-    await updateRow(newRow.id, typedRow);
+    // await updateRow(newRow.id, typedRow);
+    await sendRowToSupabase(typedRow);
     setRows(rows.map((row) => (row.id === newRow.id ? typedRow : row)));
     return typedRow;
   };
